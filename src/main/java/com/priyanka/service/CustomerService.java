@@ -7,16 +7,13 @@ import com.priyanka.entity.CreditCard;
 import com.priyanka.entity.Customer;
 
 public interface CustomerService {
+	 
+    Customer saveCustomer(Customer customer);// Method to save customer details
+    List<Customer> getAllCustomers(); // Method to get all customers 
 
-	Customer saveCustomer(Customer customer);//save customer details
-	
-	List<Customer> getAllCustomer();
-	
-	Optional<Customer> getCustomerById(Long id); 
-	
-	void deleteCustomer(Long id);
-	
-	CreditCard issueCreditCard(Long customerId, Long productId, String maker ,String checker);//for issue a credit card
-	
-	
+    Optional<Customer> getCustomerById(Long id); // Method to get a customer by ID
+
+    void deleteCustomer(Long id);// Method to delete a customer by ID
+
+    CreditCard issueCreditCard(Long customerId, Long productId, String maker, String checker);// Method to issue a credit card to a customer
 }

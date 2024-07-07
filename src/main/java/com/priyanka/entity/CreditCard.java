@@ -7,7 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,13 +32,14 @@ public class CreditCard {
 	 private String Creditcardstatus;
 	 private String maker;
 	 private String checker;
+	 private double dailyExpence;
 	 
 	 @ManyToOne
 	 @JoinColumn(name="customer_id",nullable = false)
 	 private Customer customer;
 	 
 	 @ManyToOne
-	 @JoinColumn(name="product_id",nullable = false)
+	 @JoinColumn(name="product_id",nullable = false) 
 	 private Product product;
 	 
 	 public CreditCard() {
@@ -43,7 +47,8 @@ public class CreditCard {
 	 }
 
 	public CreditCard(Long creditID, String creditcardNumber, LocalDate creditcardExpiry, int cvv, double creditLimit,
-			String creditcardstatus, String maker, String checker, Customer customer, Product product) {
+			String creditcardstatus, String maker, String checker, double dailyExpence, Customer customer,
+			Product product) {
 		super();
 		this.creditID = creditID;
 		this.creditcardNumber = creditcardNumber;
@@ -53,6 +58,7 @@ public class CreditCard {
 		Creditcardstatus = creditcardstatus;
 		this.maker = maker;
 		this.checker = checker;
+		this.dailyExpence = dailyExpence;
 		this.customer = customer;
 		this.product = product;
 	}
@@ -121,6 +127,14 @@ public class CreditCard {
 		this.checker = checker;
 	}
 
+	public double getDailyExpence() {
+		return dailyExpence;
+	}
+
+	public void setDailyExpence(double dailyExpence) {
+		this.dailyExpence = dailyExpence;
+	}
+
 	public Customer getCustomer() {
 		return customer;
 	}
@@ -136,8 +150,8 @@ public class CreditCard {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	 
-	 
 
+	
+	 
 	
 }

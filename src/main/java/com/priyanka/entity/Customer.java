@@ -29,8 +29,8 @@ public class Customer {
 	    private String email;
 	    
 	    public Customer() {
-	    	
 	    }
+	    
 		public Customer(Long customerID, String name, LocalDate dob, String address, String mobile, String pan,
 				String email) {
 			super();

@@ -15,8 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//@Entity
-//@Table(name="Transaction")
+@Entity
+@Table(name="Transaction")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,17 +29,21 @@ public class Transaction {
 	 @Column(nullable = false)
 	 private TransactionType transactionType;
 	 
-	 @OneToOne
+	 @ManyToOne
 	 @JoinColumn(name="creditcard_id",nullable = false)
 	 private CreditCard creditcard;
 	 
 	 @ManyToOne
-	 @JoinColumn(name="creditcard_id",nullable = false)
+	 @JoinColumn(name="merchant_id", nullable = false)
 	 private Merchant merchant;
+	    
+	 private double transactionAmount;
+	 private String currency;
+	 private String authCode;
 	 
-//	 private double transactionAmount;
-//     private String currency;
-//	 private String authCode;
+	 public Transaction() {
+		 
+	 }
 	public Transaction(Long transactionID, TransactionType transactionType, CreditCard creditcard, Merchant merchant,
 			double transactionAmount, String currency, String authCode) {
 		super();
@@ -47,10 +51,51 @@ public class Transaction {
 		this.transactionType = transactionType;
 		this.creditcard = creditcard;
 		this.merchant = merchant;
-//		this.transactionAmount = transactionAmount;
-//		this.currency = currency;
-//		this.authCode = authCode;
+		this.transactionAmount = transactionAmount;
+		this.currency = currency;
+		this.authCode = authCode;
 	}
-	 
+	public Long getTransactionID() {
+		return transactionID;
+	}
+	public void setTransactionID(Long transactionID) {
+		this.transactionID = transactionID;
+	}
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
+	public void setTransactionType(TransactionType transactionType) {
+		this.transactionType = transactionType;
+	}
+	public CreditCard getCreditcard() {
+		return creditcard;
+	}
+	public void setCreditcard(CreditCard creditcard) {
+		this.creditcard = creditcard;
+	}
+	public Merchant getMerchant() {
+		return merchant;
+	}
+	public void setMerchant(Merchant merchant) {
+		this.merchant = merchant;
+	}
+	public double getTransactionAmount() {
+		return transactionAmount;
+	}
+	public void setTransactionAmount(double transactionAmount) {
+		this.transactionAmount = transactionAmount;
+	}
+	public String getCurrency() {
+		return currency;
+	}
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	public String getAuthCode() {
+		return authCode;
+	}
+	public void setAuthCode(String authCode) {
+		this.authCode = authCode;
+	}
 	 
 }

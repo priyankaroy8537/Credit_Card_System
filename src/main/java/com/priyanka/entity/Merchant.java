@@ -29,7 +29,6 @@ public class Merchant {
 	    private String merchantIFSC;
 	    private String merchantBankName;
 	    private String merchantLocation;
-	    
 	    private String merchantCode;
 	    
 	    @Enumerated(EnumType.STRING)
@@ -144,7 +143,6 @@ public class Merchant {
 			this.merchantStatus = merchantStatus;
 		}
 
-		
 		
 	    
 }

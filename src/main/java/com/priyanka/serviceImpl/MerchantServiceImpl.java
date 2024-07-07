@@ -11,37 +11,41 @@ import com.priyanka.repository.MerchantRepository;
 import com.priyanka.service.MerchantService;
 
 @Service
-public class MerchantServiceImpl implements MerchantService{
+public class MerchantServiceImpl implements MerchantService {
 
-@Autowired	
- private MerchantRepository merchantRepository;
+	@Autowired
+    private MerchantRepository merchantRepository;
 
-@Override
-public Merchant saveMerchant(Merchant merchant) {
-	// TODO Auto-generated method stub
-	if(merchant.getMerchantEmail()==null || merchant.getMerchantMobile()==null) {
-		throw new IllegalArgumentException("Email and mobile number is mandatory");
-	}
-	return merchantRepository.save(merchant);	
-}
+    @Override
+    public Merchant saveMerchant(Merchant merchant) {
+        // Validate mandatory fields
+        if (merchant.getMerchantMobile() == null || merchant.getMerchantEmail() == null) {
+            throw new IllegalArgumentException("Mobile number and email id are mandatory fields to enroll a merchant");
+        }
 
-@Override
-public List<Merchant> getAllMerchants() {
-	// TODO Auto-generated method stub
-	return merchantRepository.findAll() ;
-}
+        // Generate unique merchant code (max length 7 digits)
+        merchant.setMerchantCode(generateUniqueMerchantCode());
 
-@Override
-public Optional<Merchant> getMerchantById(Long id) {
-	// TODO Auto-generated method stub
-	return merchantRepository.findById(id);
-}
+        return merchantRepository.save(merchant);
+    }
 
-@Override
-public void deleteMerchant(Long id) {
-	// TODO Auto-generated method stub
-	merchantRepository.deleteById(id);
-	
-}
- 
+    @Override
+    public List<Merchant> getAllMerchants() {
+        return merchantRepository.findAll();
+    }
+
+    @Override
+    public Optional<Merchant> getMerchantById(Long id) {
+        return merchantRepository.findById(id);
+    }
+
+    @Override
+    public void deleteMerchant(Long id) {
+        merchantRepository.deleteById(id);
+    }
+
+    private String generateUniqueMerchantCode() {
+        // Generate a unique 7-digit merchant code
+        return String.valueOf((int) (Math.random() * 9000000) + 1000000);
+    }
 }

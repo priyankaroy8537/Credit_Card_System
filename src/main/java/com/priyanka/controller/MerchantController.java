@@ -13,42 +13,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.priyanka.entity.Customer;
 import com.priyanka.entity.Merchant;
-import com.priyanka.entity.Product;
 import com.priyanka.service.MerchantService;
 
 @RestController
-@RequestMapping("/merchant")
+@RequestMapping("/merchants")
 public class MerchantController {
-	
 	@Autowired
-	private MerchantService merchantService;
-	
-	@PostMapping
-	public ResponseEntity<Merchant> saveCustomer( @RequestBody Merchant merchant){
-		Merchant saveMerchant =merchantService.saveMerchant(merchant);
-		return ResponseEntity.ok(merchant) ;
-		
-	}
-	@GetMapping
-	public ResponseEntity<List<Merchant>> getAllMerchants(){
-		List<Merchant> merchant = merchantService.getAllMerchants();
-		return ResponseEntity.ok(merchant) ;
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Merchant>>getMerchantById(@PathVariable Long id){
-		Optional<Merchant>product =merchantService.getMerchantById(id);
-		return ResponseEntity.ok(product);
-		
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Customer> deleteCustomer( @PathVariable Long id){
-		merchantService.deleteMerchant(id);
-		return ResponseEntity.noContent().build();
-		
-	} 
+    private MerchantService merchantService;
 
+    @PostMapping
+    public ResponseEntity<Merchant> saveMerchant(@RequestBody Merchant merchant) {
+        Merchant savedMerchant = merchantService.saveMerchant(merchant);
+        return ResponseEntity.ok(savedMerchant);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Merchant>> getAllMerchants() {
+        List<Merchant> merchants = merchantService.getAllMerchants();
+        return ResponseEntity.ok(merchants);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Merchant>> getMerchantById(@PathVariable Long id) {
+        Optional<Merchant> merchant = merchantService.getMerchantById(id);
+        return ResponseEntity.ok(merchant);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMerchant(@PathVariable Long id) {
+        merchantService.deleteMerchant(id);
+        return ResponseEntity.noContent().build();
+    }
 }

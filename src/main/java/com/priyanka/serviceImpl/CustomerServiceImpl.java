@@ -21,95 +21,86 @@ import jakarta.validation.Valid;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
-    
-	@Autowired
-	private CustomerRepository customerRepository;
-	@Autowired
-	private ProductRepository  productRepository;
-	@Autowired
-	private CreditCardRepository creditCardRepository;
-	
-	@Override
-	public Customer saveCustomer(@Valid Customer customer) {
-		if(customer.getPan()== null || customer.getMobile()== null || customer.getEmail()==null) {
-			throw new IllegalArgumentException("Pan, mobile and email is required fild for credit card");
-		}
-		return customerRepository.save(customer);
-	}
+	 @Autowired
+	    private CustomerRepository customerRepository;
 
-	@Override
-	public List<Customer> getAllCustomer() {
-		// TODO Auto-generated method stub
-		return customerRepository.findAll();
-	}
+	    @Autowired
+	    private ProductRepository productRepository;
 
-	@Override
-	public Optional<Customer> getCustomerById(Long id) {
-		// TODO Auto-generated method stub
-		return customerRepository.findById(id);
-	}
+	    @Autowired
+	    private CreditCardRepository creditCardRepository;
 
-	@Override
-	public void deleteCustomer(Long id) {
-		// TODO Auto-generated method stub
-		customerRepository.deleteById(id);;
-		
-	}
+	    @Override
+	    public Customer saveCustomer(@Valid Customer customer) {
+	        // Validate mandatory fields
+	        if (customer.getPan() == null || customer.getMobile() == null || customer.getEmail() == null) {
+	            throw new IllegalArgumentException("PAN, mobile # and email id are mandatory fields to issue a credit card");
+	        }
+	        return customerRepository.save(customer);
+	    }
 
-	@Override
-	public CreditCard issueCreditCard(Long customerId, Long productId, String maker, String checker) {
-		Customer customer = customerRepository.findById(customerId)
-				.orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+	    @Override
+	    public List<Customer> getAllCustomers() {
+	        return customerRepository.findAll();
+	    }
 
-				        Product product = productRepository.findById(productId)
-				                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+	    @Override
+	    public Optional<Customer> getCustomerById(Long id) {
+	        return customerRepository.findById(id);
+	    }
 
-				       
-				        String cardNumberPrefix;
-				        if (product.getCardType()== CardType.VISA) {
-				            cardNumberPrefix = "4";
-				        } else if (product.getCardType()== CardType.MASTERCARD) {
-				            cardNumberPrefix = "5";
-				        } else {
-				            throw new IllegalArgumentException("Unsupported card type");
-				        }
+	    @Override
+	    public void deleteCustomer(Long id) {
+	        customerRepository.deleteById(id);
+	    }
 
-				        String cardNumber = cardNumberPrefix + generateCardNumberSequence();
-				        
+	    @Override
+	    public CreditCard issueCreditCard(Long customerId, Long productId, String maker, String checker) {
+	        Customer customer = customerRepository.findById(customerId)
+	                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
-				        
-				        LocalDate expiryDate = LocalDate.now().plusMonths(product.getProductExpiry());
-				        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
-				        String expiryDateFormatted = expiryDate.format(formatter); 
+	        Product product = productRepository.findById(productId)
+	                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
-				       
-				        CreditCard creditCard = new CreditCard(productId, expiryDateFormatted, expiryDate, 0, productId, expiryDateFormatted, expiryDateFormatted, expiryDateFormatted, customer, product);
-				        creditCard.setCreditcardNumber(cardNumber);
-				        creditCard.setCreditcardExpiry(expiryDate);
-				        creditCard.setCvv((int) (Math.random() * 900) + 100); 
-				        creditCard.setCreditLimit(product.getProductLimit());
-				        creditCard.setCreditcardstatus("open"); // Default status
-				        creditCard.setMaker(maker);
-				        creditCard.setChecker(checker);
-				        creditCard.setCustomer(customer);
-				        creditCard.setProduct(product);
+	        // Generate card number
+	        String cardNumberPrefix;
+	        if (product.getCardType()== CardType.VISA) {
+	            cardNumberPrefix = "4";
+	        } else if (product.getCardType()== CardType.MASTERCARD) {
+	            cardNumberPrefix = "5";
+	        } else {
+	            throw new IllegalArgumentException("Unsupported card type");
+	        }
 
-				        return creditCardRepository.save(creditCard);
-				    }
+	        String cardNumber = cardNumberPrefix + generateCardNumberSequence();
+	        //String cardNumberPrefix = product.getProductDescription().equalsIgnoreCase("VISA") ? "4" : "5";
+	        //String cardNumber = cardNumberPrefix + generateCardNumberSequence();
 
-				    private String generateCardNumberSequence() {
-				        
-				        long number = (long) (Math.random() * 1_000_000_000_000_000L);
-				        return String.format("%015d", number);
-				    }
+	        // Calculate expiry date
+	        LocalDate expiryDate = LocalDate.now().plusMonths(product.getProductExpiry());
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
+	        String expiryDateFormatted = expiryDate.format(formatter); 
 
-	}
+	        // Create CreditCard entity
+	        CreditCard creditCard = new CreditCard(productId, expiryDateFormatted, expiryDate, 0, productId, expiryDateFormatted, expiryDateFormatted, expiryDateFormatted,0, customer, product);
+	        creditCard.setCreditcardNumber(cardNumber);
+	        creditCard.setCreditcardExpiry(expiryDate);
+	        creditCard.setCvv((int) (Math.random() * 900) + 100); // Generate random 3-digit CVV
+	        creditCard.setCreditLimit(product.getProductLimit());
+	        creditCard.setCreditcardstatus("open"); // Default status
+	        creditCard.setMaker(maker);
+	        creditCard.setChecker(checker);
+	        creditCard.setCustomer(customer);
+	        creditCard.setProduct(product);
+	        creditCard.setDailyExpence(0);
 
-	
-		    
+	        return creditCardRepository.save(creditCard);
+	    }
 
-		    
-	
-	
-
-
+	    private String generateCardNumberSequence() {
+	        // Generate a 15-digit sequence number (assuming you have a sequence generator in your DB)
+	        // For example purposes, we will just generate a random number
+	        long number = (long) (Math.random() * 1_000_000_000_000_000L);
+	        return String.format("%015d", number);
+	    }
+}
